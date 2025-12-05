@@ -1,0 +1,30 @@
+# neon
+includes:
+  - 'vendor/larastan/larastan/extension.neon'
+  - 'vendor/phpstan/phpstan-strict-rules/rules.neon'
+
+parameters:
+  paths:
+    - 'app/'
+    - 'routes/'
+    - 'database/'
+
+  level: 8
+  tmpDir: 'var/phpstan'
+
+  checkImplicitMixed: true
+  treatPhpDocTypesAsCertain: false
+
+  # Laravel helpers/containers that are dynamic
+  universalObjectCratesClasses:
+    - 'Illuminate\Support\Fluent'
+
+  # Exclude non-source or generated dirs
+  excludePaths:
+    - '*/storage/*'
+    - '*/bootstrap/*'
+    - '*/vendor/*'
+
+  # Keep ignores minimal; add only for proven false positives
+  ignoreErrors:
+    - identifier: 'missingType.generics'
