@@ -48,7 +48,7 @@ class BulkDeleteFilesRequest extends FormRequest
             'file_ids.required' => 'Please provide file IDs to delete.',
             'file_ids.array' => 'File IDs must be provided as an array.',
             'file_ids.min' => 'Please provide at least one file ID.',
-            'file_ids.*. integer' => 'Each file ID must be an integer.',
+            'file_ids.*.integer' => 'Each file ID must be an integer.',
             'file_ids.*.exists' => 'One or more file IDs do not exist.',
         ];
     }
