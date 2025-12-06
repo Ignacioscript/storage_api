@@ -27,7 +27,7 @@ class CopyFileRequest extends FormRequest
             'destination_disk_id' => [
                 'required',
                 'integer',
-                Rule::exists('disk', 'id'),
+                Rule::exists('disks', 'id'),
                 'different:source_disk_id' // destination_disk_id != source_disk_id
             ],
         ];
