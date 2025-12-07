@@ -22,9 +22,10 @@ class DiskResource extends JsonResource
             'driver' => $this->driver,
             'configuration' => $this->configuration,
             'isActive' => $this->is_active,
-            'filesCount' => $this->WhenLoaded( //this means when eager is loaded Disk::with('files')
-                'files', fn () => $this->files->count()
-            ),
+//            'filesCount' => $this->WhenLoaded( //this means when eager is loaded Disk::with('files')
+//                'files', fn () => $this->files->count()
+//            ),
+            'filesCount' => $this->files_count ?? 0, // $a ?? $b ->  if $a is null $a = $b,
             'created_at' => $this->formatted_date_at,
             'updated_at' => $this->formatted_date_at,
         ];
