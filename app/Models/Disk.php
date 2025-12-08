@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\DiskDriver;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,22 +42,36 @@ class Disk extends Model
 
 
     /** Scope: query to only include active disks */
-    public function scopeActive(Builder $query)
+    #[Scope]
+    public function active(Builder $query)
     {
         return $query->where('is_active', true);
     }
 
 
-    /** Scope: query to filter specific driver types */
-    public function scopeDriver(Builder $query, DiskDriver $driver)
+    #[Scope]
+    public function inactive(Builder $query)
+    {
+        return $query->where('is_active', false);
+    }
+
+
+    /**
+     * Scope: query to filter specific driver types
+     * @param Builder $query
+     * @param DiskDriver $driver
+     * @return Builder
+     */
+    #[Scope]
+    protected function driver(Builder $query, DiskDriver $driver): Builder
     {
         return $query->where('driver', $driver->value);
     }
 
     /** Accessor to get a human-readable date
-     * @return string
+     * @return string|null
      */
-    public function getFormattedDateAtAttribute()
+    public function getFormattedDateAtAttribute(): ?string
     {
         return $this->created_at?->format('F j, Y');
     }

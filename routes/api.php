@@ -13,6 +13,8 @@ Route::get('test', function () {
 
 Route::get('disks', [DiskController::class, 'index']);
 Route::get('files', [FileController::class, 'index']);
+Route::get('disks/{disk}', [DiskController::class, 'show']);
+Route::post('disks', [DiskController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
