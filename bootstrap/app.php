@@ -24,16 +24,16 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'verified' => EnsureEmailIsVerified::class,
-        ]);
+            'verified' => EnsureEmailIsVerified::class,             ]);
 
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        //Sentry
         Integration::handles($exceptions);
 
         // Custom global handle exception for model binding
-        $exceptions->render(function (\Throwable $exception, $request) {
+        $exceptions->render(function (Throwable $exception, $request) {
             if (
                 $exception instanceof ModelNotFoundException ||
                 $exception instanceof NotFoundHttpException
@@ -44,4 +44,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 404);
             }
         });
+        //
+
+
     })->create();

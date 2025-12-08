@@ -8,12 +8,11 @@ namespace App\Http\Controllers\Api;
 use App\Enums\DiskDriver;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDiskRequest;
+use App\Http\Requests\UpdateDiskRequest;
 use App\Http\Resources\DiskCollection;
 use App\Http\Resources\DiskResource;
 use App\Models\Disk;
 use App\Traits\ApiResponses;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -60,43 +59,50 @@ class DiskController extends Controller
      */
     public function store(StoreDiskRequest $request): JsonResponse
     {
-        try {
+
             $disk = Disk::create($request->validated());
-            return $this->success('Disk created sueccesfully', [
+            return $this->success('Disk created successfully', [
                 'disk_id' => $disk->id,
                 'disk_name' => $disk->name,
                 'disk' =>  new DiskResource($disk)
             ], 201);
-        }catch (Exception $e) {
-           return  $this->error('Failed to create a new disk', 500);
-        }
+
 
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Disk $disk): JsonResponse
+    public function show(Disk $disk): DiskResource
     {
 
        $disk->loadCount('files');
-        return response()->json(new DiskResource($disk), 200);
+       return new DiskResource($disk);
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Disk $disk)
+    public function update(UpdateDiskRequest $request, Disk $disk): JsonResponse
     {
-        //
+        $disk->update($request->validated());
+        return $this->success('Update successfully ',[
+           'data' => new DiskResource($disk)
+       ], 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Disk $disk)
+    public function destroy(Disk $disk): JsonResponse
     {
-        //
+        if ($disk->files()->exists()) {
+            return $this->error('Cannot delete disk that contains files', 405);
+        }
+        $disk->delete();
+        return $this->ok('disk was deleted', 201);
     }
 }
+
+
